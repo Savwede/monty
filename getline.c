@@ -1,39 +1,57 @@
 #include "monty.h"
 
 
-#define MAX_LINE_LENGTH 1024
+#define BUFFER_SIZE 1024
 /**
  *getline - read a line from file
  *
- *@str: string pointer
- *@length: lenght of chars to read
+ *@lineptr: string pointer
+ *@n: lenght of chars to read
  *@stream: file or stdin
  *
  *Return: number of char read
 */
 
-ssize_t getline(char **str, size_t *length, FILE *stream)
-{
-	int line_length, c;
-	char *line = *str;
 
-	if (fgets(line, length, stream))
-	{
-		/* If fgets() reads a line successfully,*/
-		/* check if the line is too long and needs to be truncated.*/
-		line_length = strlen(line);
-		if (line_length > 0 && line[line_length - 1] != '\n')
-		{
-/* If the line is too long, truncate it and discard the rest of the input.*/
-			line[line_length - 1] = '\0';
-			while ((c = getchar()) != '\n' && c != EOF);
+ssize_t getline(char **lineptr, size_t *n, FILE *stream) {
+	int c, i = 0;
+
+	/* Allocate a buffer if one is not provided*/
+	if (*lineptr == NULL) {
+		*lineptr = malloc(BUFFER_SIZE);
+		if (*lineptr == NULL) {
+			return (-1);
 		}
-		return ((ssize_t) strlen(line));
-	} else {
-		/* If fgets() fails to read a line, return NULL.*/
-		return NULL;
+		*n = BUFFER_SIZE;
 	}
+
+	/**Read characters from the stream until
+	 *a newline character or the end
+	 * of the stream is encountered
+	 */
+	while ((c = fgetc(stream)) != EOF) {
+		/*Check if the buffer is full*/
+		if (i == *n) {
+			/*Increase the size of the buffer*/
+			*lineptr = realloc(*lineptr, *n * 2);
+			if (*lineptr == NULL) {
+				return (-1);
+			}
+			*n *= 2;
+		}
+		(*lineptr)[i++] = c;
+
+		if (c == '\n') {
+			break;
+		}
+	}
+
+	/* Add a null terminator to the end of the string*/
+	(*lineptr)[i] = '\0';
+
+	return ((ssize_t) i);
 }
+
 
 /**
  * getline_1 - reads a line from a file
