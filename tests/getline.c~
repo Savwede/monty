@@ -31,7 +31,7 @@ ssize_t getline(char **lineptr, size_t *n, FILE *stream) {
 	 */
 	while ((c = fgetc(stream)) != EOF) {
 		/*Check if the buffer is full*/
-		if ((size_t) i == *n) {
+		if (i == *n) {
 			/*Increase the size of the buffer*/
 			*lineptr = realloc(*lineptr, *n * 2);
 			if (*lineptr == NULL) {

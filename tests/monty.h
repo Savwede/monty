@@ -1,15 +1,12 @@
 #ifndef MONTY_H
 #define MONTY_H
-
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/types.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <string.h>
 #include <ctype.h>
-#include <sys/types.h>
-#undef stack_t
-
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
  * @n: integer
@@ -25,8 +22,6 @@ typedef struct stack_s
 	struct stack_s *prev;
 	struct stack_s *next;
 } stack_t;
-
-
 /**
  * struct bus_s - variables -args, file, line content
  * @arg: value
@@ -56,6 +51,10 @@ typedef struct instruction_s
 	char *opcode;
 	void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
+
+ssize_t getline(char **str, size_t *length, FILE *stream);
+ssize_t getline_1(char *buf, size_t size, FILE *stream);
+
 char *_realloc(char *ptr, unsigned int old_size, unsigned int new_size);
 ssize_t getstdin(char **lineptr, int file);
 char  *clean_line(char *content);
