@@ -13,37 +13,34 @@
 */
 
 
-ssize_t getline(char **lineptr, size_t *n, FILE *stream) {
+ssize_t getline(char **lineptr, size_t *n, FILE *stream)
+{
 	int c, i = 0;
 
 	/* Allocate a buffer if one is not provided*/
-	if (*lineptr == NULL) {
+	if (*lineptr == NULL)
+	{
 		*lineptr = malloc(BUFFER_SIZE);
-		if (*lineptr == NULL) {
+		if (*lineptr == NULL)
 			return (-1);
-		}
 		*n = BUFFER_SIZE;
 	}
-
-	/**Read characters from the stream until
-	 *a newline character or the end
-	 * of the stream is encountered
-	 */
-	while ((c = fgetc(stream)) != EOF) {
+	while ((c = fgetc(stream)) != EOF)
+	{
 		/*Check if the buffer is full*/
-		if ((size_t) i == *n) {
+		if ((size_t) i == *n)
+		{
 			/*Increase the size of the buffer*/
 			*lineptr = realloc(*lineptr, *n * 2);
-			if (*lineptr == NULL) {
+			if (*lineptr == NULL)
 				return (-1);
-			}
+
 			*n *= 2;
 		}
 		(*lineptr)[i++] = c;
 
-		if (c == '\n') {
+		if (c == '\n')
 			break;
-		}
 	}
 
 	/* Add a null terminator to the end of the string*/
@@ -69,13 +66,14 @@ ssize_t getline_1(char *buf, size_t size, FILE *stream)
 	int c = 0;
 
 	if (size == 0)
-		return 0;
+		return (0);
 
 	for (count = 0; c != '\n' && count < size - 1; count++)
 	{
 		c = getc(stream);
 
-		if (c == EOF) {
+		if (c == EOF)
+		{
 			if (count == 0)
 				return (-1);
 			break;
